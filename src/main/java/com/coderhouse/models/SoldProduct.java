@@ -18,16 +18,17 @@ public class SoldProduct {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private long sold_product_id;
 	
+	@Column(name = "price",nullable = false) //Precio al momneto de la venta.
+	private float soldPrice;
+	
 	@Column(name = "quantity",nullable = false) //Precio al momneto de la venta.
-	private float sold_price;
+	private float soldQuantity;
 	
-	@ManyToOne
-    @JoinColumn(name = "invoice_id", nullable = false)
-    private Invoice invoice;
-	
-	@OneToOne
-	@JoinColumn(name = "product_id", nullable = false)
-	private Product product;
+	@Override
+	public String toString() {
+		return "SoldProduct [sold_product_id=" + sold_product_id + ", soldPrice=" + soldPrice + ", soldQuantity="
+				+ soldQuantity + ", invoice=" + invoice + ", product=" + product + "]";
+	}
 
 	public long getSold_product_id() {
 		return sold_product_id;
@@ -37,12 +38,20 @@ public class SoldProduct {
 		this.sold_product_id = sold_product_id;
 	}
 
-	public float getSold_price() {
-		return sold_price;
+	public float getSoldPrice() {
+		return soldPrice;
 	}
 
-	public void setSold_price(float sold_price) {
-		this.sold_price = sold_price;
+	public void setSoldPrice(float soldPrice) {
+		this.soldPrice = soldPrice;
+	}
+
+	public float getSoldQuantity() {
+		return soldQuantity;
+	}
+
+	public void setSoldQuantity(float soldQuantity) {
+		this.soldQuantity = soldQuantity;
 	}
 
 	public Invoice getInvoice() {
@@ -61,12 +70,14 @@ public class SoldProduct {
 		this.product = product;
 	}
 
-	@Override
-	public String toString() {
-		return "SoldProduct [sold_product_id=" + sold_product_id + ", sold_price=" + sold_price + ", invoice=" + invoice
-				+ ", product=" + product + "]";
-	}
+	@ManyToOne
+    @JoinColumn(name = "invoice_id", nullable = false)
+    private Invoice invoice;
 	
+	@OneToOne
+	@JoinColumn(name = "product_id", nullable = false)
+	private Product product;
+
 	
 	
 	
