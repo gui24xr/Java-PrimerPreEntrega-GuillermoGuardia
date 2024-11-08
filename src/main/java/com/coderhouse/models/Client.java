@@ -113,6 +113,10 @@ public class Client {
 				+ ", addressStreet=" + addressStreet + ", postalCode=" + postalCode + ", phoneNumber=" + phoneNumber
 				+ ", invoices=" + invoices + "]";
 	}
+	
+	public Client() {
+        // Hibernate necesita este constructor vacío para instanciar el objeto
+    }
 
 	public Client(String dni, String firstName, String lastName, String addressStreet, String postalCode,
 			String phoneNumber) {
