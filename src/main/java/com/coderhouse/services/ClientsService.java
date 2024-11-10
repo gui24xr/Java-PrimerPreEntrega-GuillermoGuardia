@@ -2,11 +2,12 @@ package com.coderhouse.services;
 
 import java.util.List;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.coderhouse.models.Client;
-import com.coderhouse.repositories.ClientRepository;
+import com.coderhouse.repositories.ClientsRepository;
 
 import jakarta.transaction.Transactional;
 
@@ -14,25 +15,25 @@ import jakarta.transaction.Transactional;
 public class ClientsService {
 	
 	@Autowired
-	ClientRepository clientRepository;
+	ClientsRepository clientsRepository;
 	
 	public List<Client> getAllClients(){
-		return clientRepository.findAll();
+		return clientsRepository.findAll();
 	}
 	
 	public Client findById(long id) {
-		return  clientRepository.findById(id)
+		return  clientsRepository.findById(id)
 				.orElseThrow(()-> new IllegalArgumentException("Cliente no encontrado..."));
 		
 	}
 
 	public Client saveClient(Client newClient) {
-		return clientRepository.save(newClient);
+		return clientsRepository.save(newClient);
 	}
 	
 	@Transactional
 	public Client updateClient(Long clientId,Client clientDetails) {
-		Client updatingClient = clientRepository.findById(clientId)
+		Client updatingClient = clientsRepository.findById(clientId)
 				.orElseThrow(()-> new IllegalArgumentException("Cliente no encontrado..."));
 		
 		//Seteo los valores nuevos pero antes los valido.
@@ -43,12 +44,12 @@ public class ClientsService {
 		if (clientDetails.getPhoneNumber() != null) updatingClient.setPhoneNumber(clientDetails.getPhoneNumber());
 		if (clientDetails.getPostalCode() != null) updatingClient.setPostalCode(clientDetails.getPostalCode());
 		
-		return clientRepository.save(updatingClient);	
+		return clientsRepository.save(updatingClient);	
 	}
 	
 	public void deleteClientById(Long clientId) {
-		if (!clientRepository.existsById(clientId)) throw new IllegalArgumentException("Cliente no encontrado...");
+		if (!clientsRepository.existsById(clientId)) throw new IllegalArgumentException("Cliente no encontrado...");
 		//Aca vendria solo si existe x lo cual puedo borralos sin problemas.
-		clientRepository.deleteById(clientId);
+		clientsRepository.deleteById(clientId);
 	}
 }

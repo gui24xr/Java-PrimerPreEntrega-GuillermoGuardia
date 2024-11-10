@@ -20,17 +20,26 @@ import jakarta.persistence.Table;
 public class Invoice {
 	
 	
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "invoice_id")
+	private long invoiceId;
 	
-	public Invoice(long invoiceId, Date invoiceDate, Date payedDate, float amount, Client client,
-			List<SoldProduct> detail) {
-		super();
-		this.invoiceId = invoiceId;
-		this.invoiceDate = invoiceDate;
-		this.payedDate = payedDate;
-		this.amount = amount;
-		this.client = client;
-		this.detail = detail;
-	}
+	@Column(name = "invoice_date", nullable=false)
+	private Date invoiceDate;
+	
+	@Column(name="payed_date")
+	private Date payedDate;
+	
+	@Column(name = "amount", nullable=false)
+	private float amount;
+	
+	@OneToOne
+	@JoinColumn(name = "client_id", nullable = false)
+	private Client client;
+	
+	@OneToMany(mappedBy="invoice", cascade=CascadeType.ALL)
+	private List<Sale> detail = new ArrayList<>();
 
 	@Override
 	public String toString() {
@@ -78,33 +87,14 @@ public class Invoice {
 		this.client = client;
 	}
 
-	public List<SoldProduct> getDetail() {
+	public List<Sale> getDetail() {
 		return detail;
 	}
 
-	public void setDetail(List<SoldProduct> detail) {
+	public void setDetail(List<Sale> detail) {
 		this.detail = detail;
 	}
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "invoice_id")
-	private long invoiceId;
 	
-	@Column(name = "invoice_date", nullable=false)
-	private Date invoiceDate;
 	
-	@Column(name="payed_date")
-	private Date payedDate;
-	
-	@Column(name = "amount", nullable=false)
-	private float amount;
-	
-	@OneToOne
-	@JoinColumn(name = "client_id", nullable = false)
-	private Client client;
-	
-	@OneToMany(mappedBy="invoice", cascade=CascadeType.ALL)
-	private List<SoldProduct> detail = new ArrayList<>();
 	
 }

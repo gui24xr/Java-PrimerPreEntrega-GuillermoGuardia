@@ -2,13 +2,13 @@ package com.coderhouse.models;
 
 import java.sql.Date;
 
+import org.hibernate.annotations.CreationTimestamp;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -19,7 +19,7 @@ public class Product {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "product_id")
-	private long idCliente;
+	private long productId;
 	
 	@Column (name = "code",nullable=false, unique=true)
 	private String code;
@@ -28,22 +28,43 @@ public class Product {
 	private String title;
 	
 	@Column(name="created_at")
+	@CreationTimestamp //Para que al crearse el registro
 	private Date createdAt;
 	
-	@OneToOne
-	@JoinColumn(name = "product_id", nullable = false)
-	private ProductStock productStock;
+	@Column(name="last_update")
+	@CreationTimestamp //Para que al crearse el registro ponga el valor pero este luego sera actualizado maniualemente en los update.
+	private Date lastUpdate;
 	
-	@OneToOne
-	@JoinColumn(name = "product_id", nullable = false, unique = true)
-	private ProductPrice productprice;
+	
+	@Column(name="current_price")
+	private float currentPrice;
+	
+	@Column(name="current_price_last_update")
+	@CreationTimestamp //Luego de la creacion hay que actualiz<r manualmente,
+	private Date currentPriceLastUpdate;
+	
 
-	public long getIdCliente() {
-		return idCliente;
+	@Column(name="stock")
+	private int stock;
+	
+	@Column(name="stock_last_update")
+	@CreationTimestamp //Luego de la creacion hay que actualiz<r manualmente,
+	private Date stockLastUpdate;
+	
+	
+	@Override
+	public String toString() {
+		return "Product [productId=" + productId + ", code=" + code + ", title=" + title + ", createdAt=" + createdAt
+				+ ", lastUpdate=" + lastUpdate + ", currentPrice=" + currentPrice + ", currentPriceLastUpdate="
+				+ currentPriceLastUpdate + ", stock=" + stock + ", stockLastUpdate=" + stockLastUpdate + "]";
 	}
 
-	public void setIdCliente(long idCliente) {
-		this.idCliente = idCliente;
+	public long getProductId() {
+		return productId;
+	}
+
+	public void setProductId(long productId) {
+		this.productId = productId;
 	}
 
 	public String getCode() {
@@ -70,37 +91,46 @@ public class Product {
 		this.createdAt = createdAt;
 	}
 
-	public ProductStock getProductStock() {
-		return productStock;
+	public Date getLastUpdate() {
+		return lastUpdate;
 	}
 
-	public void setProductStock(ProductStock productStock) {
-		this.productStock = productStock;
+	public void setLastUpdate(Date lastUpdate) {
+		this.lastUpdate = lastUpdate;
 	}
 
-	public ProductPrice getProductprice() {
-		return productprice;
+	public float getCurrentPrice() {
+		return currentPrice;
 	}
 
-	public void setProductprice(ProductPrice productprice) {
-		this.productprice = productprice;
+	public void setCurrentPrice(float currentPrice) {
+		this.currentPrice = currentPrice;
 	}
 
-	@Override
-	public String toString() {
-		return "Product [idCliente=" + idCliente + ", code=" + code + ", title=" + title + ", createdAt=" + createdAt
-				+ ", productStock=" + productStock + ", productprice=" + productprice + "]";
+	public Date getCurrentPriceLastUpdate() {
+		return currentPriceLastUpdate;
 	}
 
-	public Product(long idCliente, String code, String title, Date createdAt) {
-		super();
-		this.idCliente = idCliente;
-		this.code = code;
-		this.title = title;
-		this.createdAt = createdAt;
+	public void setCurrentPriceLastUpdate(Date currentPriceLastUpdate) {
+		this.currentPriceLastUpdate = currentPriceLastUpdate;
 	}
-	 
+
+	public int getStock() {
+		return stock;
+	}
+
+	public void setStock(int stock) {
+		this.stock = stock;
+	}
+
+	public Date getStockLastUpdate() {
+		return stockLastUpdate;
+	}
+
+	public void setStockLastUpdate(Date stockLastUpdate) {
+		this.stockLastUpdate = stockLastUpdate;
+	}
 
 
-
+	
 }
