@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.coderhouse.dto.CreateOrUpdateClientDTO;
 import com.coderhouse.models.Client;
 import com.coderhouse.repositories.ClientsRepository;
 
@@ -21,18 +22,32 @@ public class ClientsService {
 		return clientsRepository.findAll();
 	}
 	
-	public Client findById(long id) {
-		return  clientsRepository.findById(id)
+	public Client findById(Long clientId) {
+		return  clientsRepository.findById(clientId)
 				.orElseThrow(()-> new IllegalArgumentException("Cliente no encontrado..."));
 		
 	}
+	
+	public Boolean existsClientById(Long clientId) {
+		return clientsRepository.existsById(clientId);
+	}
 
-	public Client saveClient(Client newClient) {
+	public Client saveClient(CreateOrUpdateClientDTO newClientDTO) {
+		//Construyo la entidad client a partir del objeto newClientDTO y se la entrego al repo para su creacion
+		Client newClient = new Client();
+		newClient.setDni(newClientDTO.getDni());
+		newClient.setFirstName(newClientDTO.getFirstName());
+		newClient.setLastName(newClientDTO.getLastName());
+		//Los siguientes campos podrian venir null asique tengo que comprbbarlo ya que el dto solo pide dni,firstName y lastName.
+		if (newClientDTO.getAddressStreet() != null) newClient.setAddressStreet(newClientDTO.getAddressStreet());
+		if (newClientDTO.getPostalCode()!= null) newClient.setPostalCode(newClientDTO.getPostalCode());
+		if (newClientDTO.getPhoneNumber() != null) newClient.setPhoneNumber(newClientDTO.getPhoneNumber());
+		//Finalmente guardamos en el repo  y devolvemos la instan cia de cliente.
 		return clientsRepository.save(newClient);
 	}
 	
 	@Transactional
-	public Client updateClient(Long clientId,Client clientDetails) {
+	public Client updateClient(Long clientId,CreateOrUpdateClientDTO clientDetails) {
 		Client updatingClient = clientsRepository.findById(clientId)
 				.orElseThrow(()-> new IllegalArgumentException("Cliente no encontrado..."));
 		

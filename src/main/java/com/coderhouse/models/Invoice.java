@@ -4,6 +4,8 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -36,6 +38,7 @@ public class Invoice {
 	
 	@OneToOne
 	@JoinColumn(name = "client_id", nullable = false)
+	 @JsonBackReference
 	private Client client;
 	
 	@OneToMany(mappedBy="invoice", cascade=CascadeType.ALL)

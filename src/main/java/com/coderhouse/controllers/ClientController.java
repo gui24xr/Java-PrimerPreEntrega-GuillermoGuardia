@@ -14,8 +14,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.coderhouse.dto.CreateOrUpdateClientDTO;
 import com.coderhouse.models.Client;
 import com.coderhouse.services.ClientsService;
+
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/clients")
@@ -51,7 +54,7 @@ public class ClientController {
 	}
 	
 	@PostMapping
-	public ResponseEntity<Client> createClient(@RequestBody Client newClient) {
+	public ResponseEntity<Client> createClient(@Valid @RequestBody CreateOrUpdateClientDTO newClient) {
 		try {
 			Client createdClient = clientsService.saveClient(newClient);
 			return ResponseEntity.ok(createdClient);
@@ -61,7 +64,7 @@ public class ClientController {
 	}
 	
 	@PutMapping("/{id}")
-	public ResponseEntity<Client> updateClient(@PathVariable("id") Long clientId,@RequestBody Client clientsNewValues){
+	public ResponseEntity<Client> updateClient(@PathVariable("id") Long clientId,@Valid @RequestBody CreateOrUpdateClientDTO clientsNewValues){
 		try {
 			Client updatedClient = clientsService.updateClient(clientId, clientsNewValues);
 			return ResponseEntity.ok(updatedClient);

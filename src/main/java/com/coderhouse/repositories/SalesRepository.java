@@ -7,4 +7,5 @@ import com.coderhouse.models.Sale;
 
 public interface SalesRepository extends JpaRepository<Sale,Long>{
 
+	
 }

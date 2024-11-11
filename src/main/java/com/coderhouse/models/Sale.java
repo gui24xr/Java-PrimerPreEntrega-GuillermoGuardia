@@ -24,6 +24,7 @@ public class Sale {
 	@Column(name = "quantity",nullable = false) //Cantidad de vendidos en la venta.
 	private float saleQuantity;
 	
+		
 	@ManyToOne
     @JoinColumn(name = "invoice_id", nullable = false)
     private Invoice invoice;

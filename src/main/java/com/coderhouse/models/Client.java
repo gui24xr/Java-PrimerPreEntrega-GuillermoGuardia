@@ -3,6 +3,8 @@ package com.coderhouse.models;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -41,6 +43,7 @@ public class Client {
 	private String phoneNumber;
 	
 	@OneToMany(mappedBy="client", cascade=CascadeType.ALL)
+    @JsonManagedReference 
 	private List<Invoice> invoices = new ArrayList<>();
 
 	public long getClientId() {
