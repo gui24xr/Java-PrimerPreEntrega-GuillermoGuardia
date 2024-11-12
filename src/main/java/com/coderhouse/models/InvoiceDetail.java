@@ -1,5 +1,7 @@
 package com.coderhouse.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Column;
 
 import jakarta.persistence.Entity;
@@ -11,12 +13,12 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name="sales")
-public class Sale {
+@Table(name="invoice_details")
+public class InvoiceDetail {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private long saleId;
+	private long detailId;
 	
 	@Column(name = "sale_price",nullable = false) //Precio al momneto de la venta.
 	private float salePrice;
@@ -27,6 +29,7 @@ public class Sale {
 		
 	@ManyToOne
     @JoinColumn(name = "invoice_id", nullable = false)
+	 @JsonBackReference
     private Invoice invoice;
 	
 	@ManyToOne
@@ -35,12 +38,20 @@ public class Sale {
 
 	
 
+	public InvoiceDetail(float salePrice, float saleQuantity, Invoice invoice, Product product) {
+		super();
+		this.salePrice = salePrice;
+		this.saleQuantity = saleQuantity;
+		this.invoice = invoice;
+		this.product = product;
+	}
+
 	public long getSaleId() {
-		return saleId;
+		return detailId;
 	}
 
 	public void setSaleId(long saleId) {
-		this.saleId = saleId;
+		this.detailId = saleId;
 	}
 
 	public float getSalePrice() {
@@ -77,7 +88,7 @@ public class Sale {
 
 	@Override
 	public String toString() {
-		return "Sale [saleId=" + saleId + ", salePrice=" + salePrice + ", saleQuantity=" + saleQuantity + ", invoice="
+		return "Sale [saleId=" + detailId + ", salePrice=" + salePrice + ", saleQuantity=" + saleQuantity + ", invoice="
 				+ invoice + ", product=" + product + "]";
 	}
 

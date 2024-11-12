@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.coderhouse.dto.CreateInvoiceDTO;
-
+import com.coderhouse.dto.CreateSaleDTO;
 import com.coderhouse.models.Invoice;
 import com.coderhouse.services.InvoicesService;
 
@@ -53,7 +53,7 @@ public class InvoiceControllers {
 	}
 	
 	
-	@PostMapping
+	@PostMapping //Crea un invoice vacia con la fecha y el clientId indicados en el createInvoiceDTO
 	public ResponseEntity<Invoice> createInvoice(@Valid @RequestBody CreateInvoiceDTO newInvoiceDTO){
 		try {
 			Invoice createdInvoice = invoicesService.createInvoice(newInvoiceDTO);
@@ -62,6 +62,20 @@ public class InvoiceControllers {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 	}
+	
+	
+	@PostMapping("/{id}/sales")
+	public ResponseEntity<Invoice> addSalesToInvoice(@PathVariable("id") Long invoiceId,@Valid @RequestBody List<CreateSaleDTO> newSalesListDTO){
+		try {
+			Invoice updatedInvoice = invoicesService.addSales(invoiceId, newSalesListDTO);
+			return ResponseEntity.ok(updatedInvoice);
+		}catch(Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		}
+	}
+	
+	//El update d invoice podria tener para modificarle compras o details
+	//Podria tener un put para modificar el clientID en la factura
 	
 	
 }

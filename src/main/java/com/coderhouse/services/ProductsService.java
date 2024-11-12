@@ -27,7 +27,11 @@ public class ProductsService {
 	//Devuelve un producto por su id.
 	public Product findById(Long id){
 		return  productsRepository.findById(id)
-				.orElseThrow(()-> new IllegalArgumentException("Cliente no encontrado..."));
+				.orElseThrow(()-> new IllegalArgumentException("Producto no encontrado..."));
+	}
+	
+	public Boolean existsProduct(Long id) {
+		return productsRepository.existsById(id);
 	}
 	
 	public Product saveProduct(CreateProductDTO newProduct) {

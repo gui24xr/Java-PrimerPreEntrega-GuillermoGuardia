@@ -42,7 +42,8 @@ public class Invoice {
 	private Client client;
 	
 	@OneToMany(mappedBy="invoice", cascade=CascadeType.ALL)
-	private List<Sale> detail = new ArrayList<>();
+	 @JsonBackReference
+	private List<InvoiceDetail> detail = new ArrayList<>();
 
 	@Override
 	public String toString() {
@@ -90,11 +91,11 @@ public class Invoice {
 		this.client = client;
 	}
 
-	public List<Sale> getDetail() {
+	public List<InvoiceDetail> getDetail() {
 		return detail;
 	}
 
-	public void setDetail(List<Sale> detail) {
+	public void setDetail(List<InvoiceDetail> detail) {
 		this.detail = detail;
 	}
 	
