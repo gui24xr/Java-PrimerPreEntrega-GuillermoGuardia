@@ -79,10 +79,14 @@ public class InvoicesService {
 					//2- Descuento el stock
 					UpdateProductStockDTO updateProductStockObject = new UpdateProductStockDTO();
 					updateProductStockObject.setNewStock(searchedProduct.getStock() - saleItem.getQuantity());
+					
 					productsService.updateProductStock(saleItem.getProductId(), updateProductStockObject);
 					//3- Guardo el detail pidendole al servicio de details y por cascada se guarda en la factura-
 					invoicesDetailsService.createSale(newInvoiceDetail);
-					
+					//Cambiamos el amount;
+					int newAmount = (int) (updatingInvoice.getAmount() + (((saleItem.getQuantity() * searchedProduct.getCurrentPrice()))));
+					updatingInvoice.setAmount(newAmount);
+					invoicesRepository.save(updatingInvoice);
 					
 				 }
 				 else {

@@ -1,10 +1,15 @@
 package com.coderhouse.models;
 
 import java.sql.Date;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+//import com.fasterxml.jackson.annotation.JsonBackReference;
+//import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -42,7 +47,7 @@ public class Invoice {
 	private Client client;
 	
 	@OneToMany(mappedBy="invoice", cascade=CascadeType.ALL)
-	 @JsonBackReference
+	  @JsonManagedReference
 	private List<InvoiceDetail> detail = new ArrayList<>();
 
 	@Override

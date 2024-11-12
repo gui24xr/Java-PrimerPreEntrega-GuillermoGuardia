@@ -2,6 +2,9 @@ package com.coderhouse.models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
+//import com.fasterxml.jackson.annotation.JsonBackReference;
+
+
 import jakarta.persistence.Column;
 
 import jakarta.persistence.Entity;
@@ -29,7 +32,7 @@ public class InvoiceDetail {
 		
 	@ManyToOne
     @JoinColumn(name = "invoice_id", nullable = false)
-	 @JsonBackReference
+	@JsonBackReference
     private Invoice invoice;
 	
 	@ManyToOne
@@ -46,52 +49,65 @@ public class InvoiceDetail {
 		this.product = product;
 	}
 
-	public long getSaleId() {
+
+
+	public long getDetailId() {
 		return detailId;
 	}
 
-	public void setSaleId(long saleId) {
-		this.detailId = saleId;
+
+
+	public void setDetailId(long detailId) {
+		this.detailId = detailId;
 	}
+
+
 
 	public float getSalePrice() {
 		return salePrice;
 	}
 
+
+
 	public void setSalePrice(float salePrice) {
 		this.salePrice = salePrice;
 	}
+
+
 
 	public float getSaleQuantity() {
 		return saleQuantity;
 	}
 
+
+
 	public void setSaleQuantity(float saleQuantity) {
 		this.saleQuantity = saleQuantity;
 	}
+
+
 
 	public Invoice getInvoice() {
 		return invoice;
 	}
 
+
+
 	public void setInvoice(Invoice invoice) {
 		this.invoice = invoice;
 	}
+
+
 
 	public Product getProduct() {
 		return product;
 	}
 
+
+
 	public void setProduct(Product product) {
 		this.product = product;
 	}
-
-	@Override
-	public String toString() {
-		return "Sale [saleId=" + detailId + ", salePrice=" + salePrice + ", saleQuantity=" + saleQuantity + ", invoice="
-				+ invoice + ", product=" + product + "]";
-	}
-
 
 	
 	
