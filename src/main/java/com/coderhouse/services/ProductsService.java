@@ -61,7 +61,7 @@ public class ProductsService {
 		return productsRepository.save(updatingProduct);
 	}
 	
-	@Transactional 
+	@Transactional  //Este metodo es para updatear el producto el stock desde el mismo servicio de productos.
 	public Product updateProductStock(Long productId,UpdateProductStockDTO newStockDTO) {
 		
 		Product updatingProduct = productsRepository.findById(productId)
@@ -72,6 +72,19 @@ public class ProductsService {
 			updatingProduct.setStockLastUpdate(new Date(0));
 			return productsRepository.save(updatingProduct);
 	
+	}
+	
+	//Este lo utilizamos para que otros servicios de la app actualicen el stock
+	@Transactional 
+	public void adjustProductStock(Long productId,int variationQuantity) {
+		try {
+			 Product product = productsRepository.findById(productId)
+			            .orElseThrow(() -> new IllegalArgumentException("Producto no encontrado"));
+			 product.setStock(product.getStock() + variationQuantity);
+			productsRepository.save(product);
+		}catch(Exception err) {
+			throw err;
+		}
 	}
 	
 	@Transactional 

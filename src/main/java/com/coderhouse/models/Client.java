@@ -1,9 +1,9 @@
 package com.coderhouse.models;
 
 import java.util.ArrayList;
+
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.CascadeType;
 
@@ -53,7 +53,7 @@ public class Client {
 	
 	
 	@OneToMany(mappedBy="client", cascade=CascadeType.ALL)
-    @JsonManagedReference 
+    //@JsonManagedReference 
 	private List<Invoice> invoices = new ArrayList<>();
 
 	public long getClientId() {

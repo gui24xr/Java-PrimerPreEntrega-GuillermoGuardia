@@ -27,7 +27,11 @@ public class InvoiceDetail {
 	private float salePrice;
 	
 	@Column(name = "quantity",nullable = false) //Cantidad de vendidos en la venta.
-	private float saleQuantity;
+	private int saleQuantity;
+	
+	@Column(name = "subtotal_amount",nullable = false) //Cantidad de vendidos en la venta.
+	private float subTotalAmount;
+	
 	
 		
 	@ManyToOne
@@ -39,16 +43,20 @@ public class InvoiceDetail {
 	@JoinColumn(name = "product_id", nullable = false)
 	private Product product;
 
-	
+	// Constructor sin parámetros (requerido por JPA y Jackson)
+    public InvoiceDetail() {
+    }
 
-	public InvoiceDetail(float salePrice, float saleQuantity, Invoice invoice, Product product) {
+
+    //Este constructor construye la factura con subtotal.
+	public InvoiceDetail(float salePrice, int saleQuantity, Invoice invoice, Product product) {
 		super();
 		this.salePrice = salePrice;
 		this.saleQuantity = saleQuantity;
+		this.subTotalAmount = salePrice * saleQuantity;
 		this.invoice = invoice;
 		this.product = product;
 	}
-
 
 
 	public long getDetailId() {
@@ -56,11 +64,9 @@ public class InvoiceDetail {
 	}
 
 
-
 	public void setDetailId(long detailId) {
 		this.detailId = detailId;
 	}
-
 
 
 	public float getSalePrice() {
@@ -68,23 +74,29 @@ public class InvoiceDetail {
 	}
 
 
-
 	public void setSalePrice(float salePrice) {
 		this.salePrice = salePrice;
 	}
 
 
-
-	public float getSaleQuantity() {
+	public int getSaleQuantity() {
 		return saleQuantity;
 	}
 
 
-
-	public void setSaleQuantity(float saleQuantity) {
+	public void setSaleQuantity(int saleQuantity) {
 		this.saleQuantity = saleQuantity;
 	}
 
+
+	public float getSubTotalAmount() {
+		return subTotalAmount;
+	}
+
+
+	public void setSubTotalAmount(float subTotalAmount) {
+		this.subTotalAmount = subTotalAmount;
+	}
 
 
 	public Invoice getInvoice() {
@@ -92,17 +104,14 @@ public class InvoiceDetail {
 	}
 
 
-
 	public void setInvoice(Invoice invoice) {
 		this.invoice = invoice;
 	}
 
 
-
 	public Product getProduct() {
 		return product;
 	}
-
 
 
 	public void setProduct(Product product) {
@@ -111,5 +120,6 @@ public class InvoiceDetail {
 
 	
 	
+
 }
 

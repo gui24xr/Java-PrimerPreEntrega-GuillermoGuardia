@@ -2,10 +2,11 @@ package com.coderhouse.models;
 
 import java.sql.Date;
 
+
 import java.util.ArrayList;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 //import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -18,8 +19,9 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
+
 import jakarta.persistence.Table;
 
 @Entity
@@ -41,13 +43,13 @@ public class Invoice {
 	@Column(name = "amount", nullable=false)
 	private float amount;
 	
-	@OneToOne
+	@ManyToOne
 	@JoinColumn(name = "client_id", nullable = false)
-	 @JsonBackReference
+	 //@JsonBackReference
 	private Client client;
 	
 	@OneToMany(mappedBy="invoice", cascade=CascadeType.ALL)
-	  @JsonManagedReference
+	@JsonManagedReference
 	private List<InvoiceDetail> detail = new ArrayList<>();
 
 	@Override
@@ -56,6 +58,13 @@ public class Invoice {
 				+ ", amount=" + amount + ", client=" + client + ", detail=" + detail + "]";
 	}
 
+
+	// Constructor sin parámetros (requerido por JPA y Jackson)
+    public Invoice() {
+    	
+    }
+    
+    	
 	public long getInvoiceId() {
 		return invoiceId;
 	}
@@ -104,6 +113,11 @@ public class Invoice {
 		this.detail = detail;
 	}
 	
+	//Suma o resta la variacion al actual amount, Ya la variacion de monton debe venir calculada x la capa de servicio.
+	//SI es positiva o negativa pasarla con signo negativo o positivo segun corresponda
+	public void adjustAmount(float variationAmount) {
+		this.amount = this.amount + variationAmount; 	
+	}
 	
 	
 }
