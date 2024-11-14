@@ -6,6 +6,7 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.annotations.CreationTimestamp;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
@@ -37,8 +38,12 @@ public class Invoice {
 	@Column(name = "invoice_date", nullable=false)
 	private Date invoiceDate;
 	
-	@Column(name="payed_date")
-	private Date payedDate;
+	@Column(name="payed_date_last_update",nullable=false)
+	@CreationTimestamp //AL crearse el registro el payedLastUpdate debe ser ahora.
+	private Date payedDateLastUpdate;
+	
+	@Column(name="payed",nullable=false, columnDefinition = "BOOLEAN DEFAULT false")
+	private boolean payed;
 	
 	@Column(name = "amount", nullable=false)
 	private float amount;
@@ -52,10 +57,14 @@ public class Invoice {
 	@JsonManagedReference
 	private List<InvoiceDetail> detail = new ArrayList<>();
 
+
+
+
 	@Override
 	public String toString() {
-		return "Invoice [invoiceId=" + invoiceId + ", invoiceDate=" + invoiceDate + ", payedDate=" + payedDate
-				+ ", amount=" + amount + ", client=" + client + ", detail=" + detail + "]";
+		return "Invoice [invoiceId=" + invoiceId + ", invoiceDate=" + invoiceDate + ", payedDateLastUpdate="
+				+ payedDateLastUpdate + ", payed=" + payed + ", amount=" + amount + ", client=" + client + ", detail="
+				+ detail + "]";
 	}
 
 
@@ -81,13 +90,25 @@ public class Invoice {
 		this.invoiceDate = invoiceDate;
 	}
 
-	public Date getPayedDate() {
-		return payedDate;
+	public Date getPayedDateLastUpdate() {
+		return payedDateLastUpdate;
 	}
 
-	public void setPayedDate(Date payedDate) {
-		this.payedDate = payedDate;
+	public void setPayedDateLastUpdate(Date payedDate) {
+		this.payedDateLastUpdate = payedDate;
 	}
+
+	
+	
+	public Boolean getPayed() {
+		return payed;
+	}
+
+
+	public void setPayed(Boolean payed) {
+		this.payed = payed;
+	}
+
 
 	public float getAmount() {
 		return amount;

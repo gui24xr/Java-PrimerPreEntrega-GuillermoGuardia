@@ -55,14 +55,23 @@ public class Product {
 	private Date stockLastUpdate;
 	
 	
-    @OneToMany(mappedBy = "product")
-    private List<InvoiceDetail> invoiceDetails = new ArrayList<>();
+	@Column(name="active_status_last_update")
+	@CreationTimestamp 
+	private Date activeStatusLastUpdate;
+	
+	@Column(name="active",nullable=false, columnDefinition = "BOOLEAN DEFAULT true") //Al crear un producto x default esta enabled.
+	private boolean active;
+	
+
+	
+
 	
 	@Override
 	public String toString() {
 		return "Product [productId=" + productId + ", code=" + code + ", title=" + title + ", createdAt=" + createdAt
 				+ ", lastUpdate=" + lastUpdate + ", currentPrice=" + currentPrice + ", currentPriceLastUpdate="
-				+ currentPriceLastUpdate + ", stock=" + stock + ", stockLastUpdate=" + stockLastUpdate + "]";
+				+ currentPriceLastUpdate + ", stock=" + stock + ", stockLastUpdate=" + stockLastUpdate
+				+ ", activeStatusLastUpdate=" + activeStatusLastUpdate + ", enabled=" + active + "]";
 	}
 
 	public long getProductId() {
@@ -137,6 +146,23 @@ public class Product {
 		this.stockLastUpdate = stockLastUpdate;
 	}
 
+	public Date getActiveStatusLastUpdate() {
+		return activeStatusLastUpdate;
+	}
 
+	public void setActiveStatusLastUpdate(Date activeStatusLastUpdate) {
+		this.activeStatusLastUpdate = activeStatusLastUpdate;
+	}
+
+	public boolean isActive() {
+		return active;
+	}
+
+	public void setActive(boolean active) {
+		this.active = active;
+	}
+
+
+	
 	
 }

@@ -108,6 +108,21 @@ public class ProductsController {
 		}
 	}
 	
+	@PutMapping("/{id}/status")
+	public ResponseEntity<Product> updateProductStatus(@PathVariable("id") Long productId,@RequestBody boolean newStatus){
+	
+		try {
+			Product updatedProduct = productsService.changeProductActiveStatus(productId, newStatus);
+			return ResponseEntity.ok(updatedProduct);
+		}
+		catch(IllegalArgumentException e) {
+			return ResponseEntity.notFound().build();
+		}
+		catch(Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		}
+	}
+	
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Void> deleteProduct(@PathVariable("id") Long productId){
 		try {

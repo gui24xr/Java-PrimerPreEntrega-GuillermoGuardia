@@ -2,6 +2,7 @@ package com.coderhouse.services;
 
 
 
+import java.sql.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -59,6 +60,19 @@ public class InvoicesService {
 		return invoicesRepository.existsById(invoiceId);
 	}
 	
+	public boolean existsDetailWithProductId(Long productId) {
+		//Devuelve un true o false segun existan o no, detalles que tengan al producto
+		List<InvoiceDetail> listOfDetails = invoicesDetailsRepository.findAll();
+		Optional<InvoiceDetail> searchedDetail = listOfDetails.stream().filter(detail -> detail.getProduct().getProductId() == productId).findFirst();
+		
+		if (searchedDetail.isPresent()) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	
+	}
 	
 	public void deleteInvoiceById(Long clientId) {
 		if (!invoicesRepository.existsById(clientId)) throw new IllegalArgumentException("Factura no encontrada...");
@@ -80,19 +94,35 @@ public class InvoicesService {
 		return invoicesRepository.save(invoiceForSave);
 	}
 	
+
+	public Invoice setPayedInvoiceStatus(Long invoiceId,boolean payedValue) {
+		//cambia el estado de pago de la factura con la fecha actual, o sea abre o cierra la factura...
+		Optional<Invoice> searchedInvoice = invoicesRepository.findById(invoiceId);
+		if (!searchedInvoice.isEmpty()) {
+			searchedInvoice.get().setPayedDateLastUpdate(new Date(System.currentTimeMillis()));
+			searchedInvoice.get().setPayed(payedValue);
+		}
+		return invoicesRepository.save(searchedInvoice.get());
+	}
 	
 		
-	@Transactional //Agrega una lista de compras a la invoiceID
+	@Transactional //Agrega una lista de compras a la invoiceID siempre y cuando exista y no este paga(o sea cerrada)....
 	public Invoice addDetailToInvoice(Long invoiceId,CreateSaleDTO createSaleObject) {
 		try {
 			//1-Existe la factura donde agregare el producto? Si no existe salimos con excpecion. 
 			Invoice updatingInvoice = this.findById(invoiceId); //Usando el metodo del mismo service comprobamos la existencia.
-			//2- Existe el producto? Si no existe salimos..
+			
+			//2- Esta paga? Si esta pagada salimos con excepcion ya que es una factuta cerrada.
+			if (updatingInvoice.getPayed() == true) throw new IllegalArgumentException("La factura ya se encuentra cerrada por lo cual no se pueden agregar productos...");
+			
+			//3- Existe el producto? Si no existe salimos..
 			if (!productsService.existsProduct(createSaleObject.getProductId())) throw new IllegalArgumentException("Uno o mas productos que se pretenden agregar no existen...");
-			//3- Buscamos el producto usando el objeto de creacion de venta que me trae el id del producto y la cantidad requerida. Tambien averiguamos el stock.
+			//4- Buscamos el producto usando el objeto de creacion de venta que me trae el id del producto y la cantidad requerida. Tambien averiguamos el stock.
 			Product searchedProduct = productsService.findById(createSaleObject.getProductId());
-			//4- No hay stock? Salimos con excpecion
-			if (!(searchedProduct.getStock()>=createSaleObject.getQuantity())) throw new IllegalArgumentException("No Hay stock suficiente del producto para agregar...");
+			//SI el producto no esta activo/habilitado tambien salimos con excepcion xq no se puede agregar.
+			if (!searchedProduct.isActive())throw new IllegalArgumentException("Producto no habilitado a la venta...");
+			//5- No hay stock? Salimos con excpecion
+			if (!(searchedProduct.getStock()>=createSaleObject.getQuantity()))  throw new IllegalArgumentException("No Hay stock suficiente del producto para agregar...");
 			//Como ya se que tengo todo lo necesario puedo proceder.
 			//Creo y guardo el detalle y actualizo el amount. en la factura.
 			
@@ -120,7 +150,7 @@ public class InvoicesService {
 			// Le pido al servicio de productos que ajuste el stock del producto vendido.
 			productsService.adjustProductStock(createSaleObject.getProductId(), createSaleObject.getQuantity() * (-1));
 			// Ya todas las operaciones hechas retorno la invoice updateada...
-			return updatingInvoice;
+			return invoicesRepository.save(updatingInvoice);
 		}catch(Exception err) {
 			 throw err;
 		}

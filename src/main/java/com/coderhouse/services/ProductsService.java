@@ -18,6 +18,9 @@ public class ProductsService {
 	@Autowired
 	ProductsRepository productsRepository;
 	
+	//@Autowired
+	//InvoicesService invoicesService;
+	
 
 	//Devuelve todos los productos.
 	public List<Product> getAllProducts(){
@@ -41,6 +44,8 @@ public class ProductsService {
 		productForSave.setTitle(newProduct.getTitle());
 		productForSave.setCurrentPrice(newProduct.getCurrentPrice());
 		productForSave.setStock(newProduct.getStock());
+		productForSave.setActive(true); //Lo creo activo al producto.
+		productForSave.setActiveStatusLastUpdate(new Date(System.currentTimeMillis()));
 		return productsRepository.save(productForSave);
 		
 		
@@ -56,7 +61,7 @@ public class ProductsService {
 		if (productDetails.getCode() != null) updatingProduct.setCode(productDetails.getCode());
 		if (productDetails.getTitle() != null) updatingProduct.setTitle(productDetails.getTitle());
 		//Pongo en lastUpdated con esta fecha.
-		updatingProduct.setLastUpdate(new Date(0));
+		updatingProduct.setLastUpdate(new Date(System.currentTimeMillis()));
 		
 		return productsRepository.save(updatingProduct);
 	}
@@ -69,7 +74,7 @@ public class ProductsService {
 		
 		//Aca no valido que sea mayor que cero xq rcibi un dto y eso se valido ahi
 			updatingProduct.setStock(newStockDTO.getNewStock());
-			updatingProduct.setStockLastUpdate(new Date(0));
+			updatingProduct.setStockLastUpdate(new Date(System.currentTimeMillis()));
 			return productsRepository.save(updatingProduct);
 	
 	}
@@ -94,16 +99,39 @@ public class ProductsService {
 		
 		
 			updatingProduct.setCurrentPrice(newPriceDTO.getNewCurrentPrice());;
-			updatingProduct.setCurrentPriceLastUpdate(new Date(0));
+			updatingProduct.setCurrentPriceLastUpdate(new Date(System.currentTimeMillis()));
 			return productsRepository.save(updatingProduct);
 		
 	}
 	
 	
+	public Product changeProductActiveStatus(Long productId, boolean newStatus) {
+		Product updatingProduct = productsRepository.findById(productId)
+				.orElseThrow(()-> new IllegalArgumentException("Producto no encontrado..."));
+			updatingProduct.setActive(newStatus);
+			updatingProduct.setActiveStatusLastUpdate(new Date(System.currentTimeMillis()));
+		return productsRepository.save(updatingProduct);
+	}
+	
+	
+	
 	public void deleteProductById(Long productId) {
-		if (!productsRepository.existsById(productId)) throw new IllegalArgumentException("Producto no encontrado...");
-		//Aca vendria solo si existe x lo cual puedo borralos sin problemas.
-		productsRepository.deleteById(productId);
+		//El producto solo se podra borrar siempre y cuando no exista algun detalle de factura que tenga el producto, ya que si no, romperiamos datos.
+		//Si esta en una factura, lo desactivamos para que luego no pueda ser agregado a detalles de factura....
+		
+		//Quedarian registro huerfanos o borrarias detalles e informacion importante de facturas...
+		try {
+			if (!productsRepository.existsById(productId)) throw new IllegalArgumentException("Producto no encontrado...");
+			/*if (invoicesService.existsDetailWithProductId(productId) == true ) {
+				this.changeProductActiveStatus(productId,false);
+				throw new IllegalArgumentException("Producto no puede ser borrado para no romper integridad de datos, el mismo ah sido desactivado...");
+			} */
+			//Aca vendria solo si existe x lo cual puedo borralos sin problemas.
+			productsRepository.deleteById(productId);
+		}catch(Exception err) {
+			throw err;
+		}
+		
 	}	
 	
 	
