@@ -2,6 +2,7 @@ package com.coderhouse.controllers;
 
 import java.util.List;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,15 +22,29 @@ import com.coderhouse.dto.UpdateProductPriceDTO;
 import com.coderhouse.models.Product;
 import com.coderhouse.services.ProductsService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 @RestController
+@Tag(name="Gestion de productos", description="Endpoints de productos")
 @RequestMapping("/api/products")
 public class ProductsController {
 
 	@Autowired
 	ProductsService productsService;
 	
+
+	@Operation(summary = "Obtener todos los producto.")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "Lista de productos obtenida correctamente", content = {
+			@Content(mediaType = "application/json", schema = @Schema(implementation = Product.class)) }),
+			@ApiResponse(responseCode = "500", description = "Error interno del servidor", content = @Content)
+	})
 	@GetMapping
 	public ResponseEntity<List<Product>> getAllProducts() {
 		try {
@@ -40,6 +55,12 @@ public class ProductsController {
 		}
 	}
 	
+
+	@Operation(summary = "Obtener producto por id.")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "Producto encontrado correctamente", content = {
+			@Content(mediaType = "application/json", schema = @Schema(implementation = Product.class)) }),
+			@ApiResponse(responseCode = "404", description = "Producto no encontrado", content = @Content) })
 	@GetMapping("/{id}")
 	public ResponseEntity<Product> getProductById(@PathVariable("id") Long productId) {
 		try {
@@ -53,6 +74,12 @@ public class ProductsController {
 	}
 	
 
+
+	@Operation(summary = "Crear un nuevo producto.")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "201", description = "Product agregado correctamente", content = {
+				@Content(mediaType = "application/json", schema = @Schema(implementation = Product.class)) }),
+			@ApiResponse(responseCode = "500", description = "Error interno del servidor", content = @Content) })
 	@PostMapping
 	public ResponseEntity<Product> createProduct(@Valid @RequestBody CreateProductDTO newProduct) {
 		try {
@@ -64,6 +91,13 @@ public class ProductsController {
 	}
 	
 
+
+	@Operation(summary = "Actualizacion detalle de productos..")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "Producto actualizado correctamente", content = {
+			@Content(mediaType = "application/json", schema = @Schema(implementation = Product.class)) }),
+			@ApiResponse(responseCode = "500", description = "Error interno del servidor", content = @Content)
+	})
 	@PutMapping("/{id}")
 	public ResponseEntity<Product> updateProductDetails(@Valid @PathVariable("id") Long productId,@RequestBody UpdateProductDetailsDTO productNewValues){
 		try {
@@ -78,6 +112,12 @@ public class ProductsController {
 		}
 	}
 	
+	
+	@Operation(summary = "Actualizacion stock de un producto..")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "Stock de producto editado correctamente", content = {
+			@Content(mediaType = "application/json", schema = @Schema(implementation = Product.class)) }),
+			@ApiResponse(responseCode = "404", description = "Producto no encontrado", content = @Content) })
 	@PutMapping("/stock/{id}")
 	public ResponseEntity<Product> updateProductStock(@PathVariable("id") Long productId,@RequestBody UpdateProductStockDTO newStockDTO){
 	
@@ -93,6 +133,12 @@ public class ProductsController {
 		}
 	}
 	
+
+	@Operation(summary = "Actualizacion precio de un producto..")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "Precio de producto editado correctamente", content = {
+			@Content(mediaType = "application/json", schema = @Schema(implementation = Product.class)) }),
+			@ApiResponse(responseCode = "404", description = "Producto no encontrado", content = @Content) })
 	@PutMapping("/price/{id}")
 	public ResponseEntity<Product> updateProductPrice(@PathVariable("id") Long productId,@RequestBody UpdateProductPriceDTO newPriceDTO){
 	
@@ -108,6 +154,12 @@ public class ProductsController {
 		}
 	}
 	
+
+	@Operation(summary = "Actualizacion status activo/inactivo de un producto..")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "Status de producto editado correctamente", content = {
+			@Content(mediaType = "application/json", schema = @Schema(implementation = Product.class)) }),
+			@ApiResponse(responseCode = "404", description = "Producto no encontrado", content = @Content) })
 	@PutMapping("/{id}/status")
 	public ResponseEntity<Product> updateProductStatus(@PathVariable("id") Long productId,@RequestBody boolean newStatus){
 	
@@ -123,6 +175,11 @@ public class ProductsController {
 		}
 	}
 	
+	
+	@Operation(summary = "Eliminacion de un producto..")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "204", description = "Producto eliminado correctamente", content = @Content),
+			@ApiResponse(responseCode = "404", description = "Producto no encontrado", content = @Content) })
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Void> deleteProduct(@PathVariable("id") Long productId){
 		try {

@@ -2,6 +2,7 @@ package com.coderhouse.controllers;
 
 import java.util.List;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +16,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.coderhouse.dto.CreateOrUpdateClientDTO;
+
 import com.coderhouse.models.Client;
+
 import com.coderhouse.services.ClientsService;
 
 import jakarta.validation.Valid;
@@ -26,6 +29,7 @@ public class ClientController {
 	
 	@Autowired
 	ClientsService clientsService;
+
 	
 	@GetMapping
 	public ResponseEntity<List<Client>> getAllClients(){
@@ -90,7 +94,6 @@ public class ClientController {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 	}
-	
 	
 	
 

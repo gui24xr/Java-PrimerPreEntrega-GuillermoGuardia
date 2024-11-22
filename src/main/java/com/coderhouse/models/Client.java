@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import java.util.List;
 
-
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.CascadeType;
 
 //import java.util.ArrayList;
@@ -24,34 +24,41 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
+@Schema (description = "Modelo de cliente.")
 @Table (name="Clients")
 public class Client {
 	
+	@Schema (description = "id de cliente.")
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id_cliente")
 	private long clientId;
 	
-	
+	@Schema (description = "DNI de cliente.")
 	@Column (name = "dni", nullable=false, unique=true)
 	private String dni;
 	
+	@Schema (description = "Nombre de cliente.")
 	@Column (name = "first_name")
 	private String firstName;
 	
+	@Schema (description = "Apellido de cliente.")
 	@Column (name="last_name")
 	private String lastName;
 	
+	@Schema (description = "Calle y numero del domicilio de cliente.")
 	@Column (name="address_street")
 	private String addressStreet;
 	
+	@Schema (description = "Codigo postal del domicilio del cliente.")
 	@Column (name="postal_code")
 	private String postalCode;
 	
+	@Schema (description = "Numero telefonico del cliente.")
 	@Column (name="phone_number")
 	private String phoneNumber;
 	
-	
+	@Schema (description = "Lista de facturas pertenecientes al cliente.")
 	@OneToMany(mappedBy="client", cascade=CascadeType.ALL)
     //@JsonManagedReference 
 	private List<Invoice> invoices = new ArrayList<>();
