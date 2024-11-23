@@ -21,9 +21,11 @@ import com.coderhouse.models.Client;
 
 import com.coderhouse.services.ClientsService;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 @RestController
+@Tag(name="Gestion de clientes", description="Endpoints de clientes.")
 @RequestMapping("/api/clients")
 public class ClientController {
 	

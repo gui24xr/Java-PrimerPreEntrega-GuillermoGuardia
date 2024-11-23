@@ -1,18 +1,10 @@
 package com.coderhouse.models;
-
 import java.sql.Date;
-
-
 import java.util.ArrayList;
 import java.util.List;
-
 import org.hibernate.annotations.CreationTimestamp;
-
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-
-//import com.fasterxml.jackson.annotation.JsonBackReference;
-//import com.fasterxml.jackson.annotation.JsonManagedReference;
-
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -26,33 +18,40 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
+@Schema(description = "Modelo de factura.") 
 @Table(name="invoices")
 public class Invoice {
 	
 	
 	@Id
+	@Schema(description = "Id de factura.") 
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "invoice_id")
 	private long invoiceId;
 	
+	@Schema(description = "Fecha de factura.") 
 	@Column(name = "invoice_date", nullable=false)
 	private Date invoiceDate;
 	
+	@Schema(description = "Fecha de ultima actualizacion del pago de la factura.") 
 	@Column(name="payed_date_last_update",nullable=false)
 	@CreationTimestamp //AL crearse el registro el payedLastUpdate debe ser ahora.
 	private Date payedDateLastUpdate;
 	
+	@Schema(description = "Indicador de factura abierta/cerrada paga/impaga.") 
 	@Column(name="payed",nullable=false, columnDefinition = "BOOLEAN DEFAULT false")
 	private boolean payed;
 	
+	@Schema(description = "Monto total de factura.") 
 	@Column(name = "amount", nullable=false)
 	private float amount;
 	
+	@Schema(description = "Datos del cliente al cual pertenece factura.") 
 	@ManyToOne
 	@JoinColumn(name = "client_id", nullable = false)
-	 //@JsonBackReference
 	private Client client;
 	
+	@Schema(description = "Lista de de detalles de productos vendidos en la factura.") 
 	@OneToMany(mappedBy="invoice", cascade=CascadeType.ALL)
 	@JsonManagedReference
 	private List<InvoiceDetail> detail = new ArrayList<>();

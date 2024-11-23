@@ -5,11 +5,10 @@ import java.sql.Date;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 
-@Schema (description = "DTO para creacion de facturas")
+@Schema (description = "DTO para creacion de facturas (Si date es nulo toma hora de un api, y en su defecto del sistema...")
 public class CreateInvoiceDTO {
 	
 	@Schema (description = "Fecha de factura.")
-	@NotNull
 	private Date invoiceDate;
 	@Schema (description = "Id de cliente para el cual se emite la factura.")
 	@NotNull //Podria validar aca que el cliente exista o no, a futuro..

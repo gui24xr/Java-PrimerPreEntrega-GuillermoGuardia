@@ -33,6 +33,8 @@ public class InvoicesService {
 	ClientsService clientsService;
 	@Autowired
 	ProductsService productsService;
+	@Autowired
+	TimeService timeService;
 
 	
 	public List<Invoice> getAllInvoices(){
@@ -85,8 +87,20 @@ public class InvoicesService {
 		//Crea una factura vacia con la fecha invoiceDate y para el client clientId 
 		//El dto trae invoiceDate y clientId
 		Invoice invoiceForSave = new Invoice();
-		invoiceForSave.setInvoiceDate(newInvoiceDTO.getInvoiceDate());
+		
+		
+		/*IMPORTANTE: si en el dto de creacion no vino una fecha, usamos el date del timeService.*/
+		if (newInvoiceDTO.getInvoiceDate() == null ) {
+			invoiceForSave.setInvoiceDate(timeService.getCurrentDateFromAPI());
+		}
+		else {
+			
+			invoiceForSave.setInvoiceDate(newInvoiceDTO.getInvoiceDate());
+		}
+		
+		//Seteamos su amount en cero
 		invoiceForSave.setAmount(0);
+		
 		//Me faltaria setear el cliente pero como tengo el cliente id y tengo que ingresar el registro entero...
 		Client searchedClient = clientsService.findById(newInvoiceDTO.getClientId());
 		//Si hay error la excepcion viene por consecuencia del servicio...

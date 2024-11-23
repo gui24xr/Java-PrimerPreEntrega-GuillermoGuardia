@@ -3,6 +3,7 @@ package com.coderhouse.controllers;
 import java.util.List;
 
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,7 +32,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 @RestController
-@Tag(name="Gestion de productos", description="Endpoints de productos")
+@Tag(name="Gestion de productos", description="Endpoints de productos.")
 @RequestMapping("/api/products")
 public class ProductsController {
 
